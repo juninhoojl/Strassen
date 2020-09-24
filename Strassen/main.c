@@ -51,8 +51,13 @@ void strassen_multi(int n, pixel ** X, pixel ** Y, pixel ** Z){
 void soma_mat(int n, pixel ** X, pixel ** Y, pixel ** Z){
     
     // Lembrar de somar os RGB e nao os itens
-    
-    
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            Z[i][j].r = X[i][j].r + Y[i][j].r;
+            Z[i][j].g = X[i][j].g + Y[i][j].g;
+            Z[i][j].b = X[i][j].b + Y[i][j].b;
+        }
+    }
 }
 
 // n = tamanho da matriz resultado (que vai ser o dobro de R,S,T,U, que sao (n/2)x(n/2))
@@ -80,11 +85,7 @@ void parte_mat(int n, pixel ** E, pixel ** P1, pixel ** P2, pixel ** P3, pixel *
 int main(int argc, const char* argv[]){
     int n, aux_i;
     char aux;
-
-    pixel ** imagem;
-    pixel ** filtro;
-    pixel ** resultado;
-
+    
     scanf("%c%d", &aux, &aux_i);
     getchar();
     scanf("%d %d", &n, &aux_i);
@@ -93,9 +94,9 @@ int main(int argc, const char* argv[]){
     //Vou considerar que imagem[i][j] é o pixel da linha i e coluna j
     //note que essa convenção é arbitrária mas uma vez que eu assumi isso
     //devo tomar cuidado para não trocar
-    imagem = (pixel **) malloc(n * sizeof(pixel *));
-    filtro = (pixel **) malloc(n * sizeof(pixel *));
-    resultado = (pixel **) malloc(n * sizeof(pixel *));
+    pixel ** imagem = (pixel **) malloc(n * sizeof(pixel *));
+    pixel ** filtro = (pixel **) malloc(n * sizeof(pixel *));
+    pixel ** resultado = (pixel **) malloc(n * sizeof(pixel *));
     for(int i = 0; i < n; i++){
         imagem[i] = (pixel *) malloc(n * sizeof(pixel));
         filtro[i] = (pixel *) malloc(n * sizeof(pixel));
@@ -116,7 +117,20 @@ int main(int argc, const char* argv[]){
         }
     }
 
+    // Teste soma ok
+    /*
+    pixel ** soma = (pixel **) malloc(n * sizeof(pixel *));
+    for(int i = 0; i < n; i++){
+        soma[i] = (pixel *) malloc(n * sizeof(pixel));
+    }
 
+    soma_mat(n, imagem, imagem, soma);
+    printf("\n\n\n\n");
+    print_matrix(n, soma);
+    printf("\n\n\n\n");
+    return 0;
+    */
+    
     boring_multi(n, imagem, filtro, resultado);
     //strassen_multi(n, imagem, filtro, resultado);
 
