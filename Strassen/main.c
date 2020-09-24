@@ -74,11 +74,34 @@ void junta_mat(int n, pixel ** R, pixel ** S, pixel ** T, pixel ** U, pixel ** F
 // P2 (n/2 x n/2) recebe B|F
 // P3 (n/2 x n/2) recebe C|G
 // P4 (n/2 x n/2) recebe D|H
-void parte_mat(int n, pixel ** E, pixel ** P1, pixel ** P2, pixel ** P3, pixel ** P4, pixel ** P5){
+void parte_mat(int n, pixel ** E, pixel ** P1, pixel ** P2, pixel ** P3, pixel ** P4){
     
+    for(int i = 0; i < n/2; i++){ // Primeira metade das linhas
+        for(int j = 0; j < n/2; j++){ // Primeira metade das colunas P1
+            P1[i][j].r = E[i][j].r;
+            P1[i][j].g = E[i][j].g;
+            P1[i][j].b = E[i][j].b;
+        }
+        for(int j = n/2; j < n; j++){ // Segunda metade das colunas P1
+            P2[i][j-n/2].r = E[i][j].r;
+            P2[i][j-n/2].g = E[i][j].g;
+            P2[i][j-n/2].b = E[i][j].b;
+        }
+    }
     
-    
-    
+    for(int i = n/2; i < n; i++){ // Segunda metade das linhas
+        for(int j = 0; j < n/2; j++){ // Primeira metade das colunas P2
+            P3[i-n/2][j].r = E[i][j].r;
+            P3[i-n/2][j].g = E[i][j].g;
+            P3[i-n/2][j].b = E[i][j].b;
+        }
+        for(int j = n/2; j < n; j++){ // Segunda metade das colunas P2
+            P4[i-n/2][j-n/2].r = E[i][j].r;
+            P4[i-n/2][j-n/2].g = E[i][j].g;
+            P4[i-n/2][j-n/2].b = E[i][j].b;
+        }
+    }
+
 }
 
 
@@ -127,6 +150,33 @@ int main(int argc, const char* argv[]){
     soma_mat(n, imagem, imagem, soma);
     printf("\n\n\n\n");
     print_matrix(n, soma);
+    printf("\n\n\n\n");
+    return 0;
+    */
+    
+    // Teste parte ok
+    /*
+    
+    pixel ** R = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** S = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** T = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** U = (pixel **) malloc(n/2 * sizeof(pixel *));
+    for(int i = 0; i < n/2; i++){
+        R[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        S[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        T[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        U[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+    }
+    
+    parte_mat(n, imagem, R, S, T, U);
+    printf("\n\n\n\n");
+    print_matrix(n/2, R);
+    printf("\n\n\n\n");
+    print_matrix(n/2, S);
+    printf("\n\n\n\n");
+    print_matrix(n/2, T);
+    printf("\n\n\n\n");
+    print_matrix(n/2, U);
     printf("\n\n\n\n");
     return 0;
     */
