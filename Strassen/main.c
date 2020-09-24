@@ -49,16 +49,6 @@ void parte_mat(int n, pixel ** E, pixel ** P1, pixel ** P2, pixel ** P3, pixel *
     
 }
 
-/*
-void print_matrixA(int n, pixel ** M){
-    for(int i = 0; i < n; i++){
-        for(int j = 0; j < n; j++){
-            printf("%d %d %d ", M[i][j].r, M[i][j].g, M[i][j].b);
-        }
-        printf("\n");
-    }
-}
-*/
 void print_matrix(int n, pixel ** M){
     for(int i = 0; i < n; i++){
         for(int j = 0; j < n; j++){
@@ -90,7 +80,19 @@ void boring_multi(int n, pixel ** X, pixel ** Y, pixel ** Z){
 
 // n = tamanho da matriz resultado que eh a Z que tem dimensao nxn
 // X e Y tambem tem dimensao nxn
-void soma_mat(int n, pixel ** X, pixel ** Y, pixel ** Z){
+void soma_mat(int n, pixel ** X, pixel ** Y){
+    
+    // Lembrar de somar os RGB e nao os itens
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            X[i][j].r += Y[i][j].r;
+            X[i][j].g += Y[i][j].g;
+            X[i][j].b += Y[i][j].b;
+        }
+    }
+}
+
+void soma_mat2(int n, pixel ** X, pixel ** Y, pixel ** Z){
     
     // Lembrar de somar os RGB e nao os itens
     for(int i = 0; i < n; i++){
@@ -154,17 +156,12 @@ void strassen_multi(int n, pixel ** X, pixel ** Y, pixel ** Z){
     
     pixel ** AE = (pixel **) malloc(n/2 * sizeof(pixel *)); // Vai virar R = AE + BG
     pixel ** BG = (pixel **) malloc(n/2 * sizeof(pixel *));
-    pixel ** AF = (pixel **) malloc(n/2 * sizeof(pixel *)); //
+    pixel ** AF = (pixel **) malloc(n/2 * sizeof(pixel *)); // Vai virar S = AF + BH
     pixel ** BH = (pixel **) malloc(n/2 * sizeof(pixel *));
-    pixel ** CE = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** CE = (pixel **) malloc(n/2 * sizeof(pixel *)); // Vai virar T = CE + DG
     pixel ** DG = (pixel **) malloc(n/2 * sizeof(pixel *));
-    pixel ** CF = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** CF = (pixel **) malloc(n/2 * sizeof(pixel *)); // Vai virar U = CF + DH
     pixel ** DH = (pixel **) malloc(n/2 * sizeof(pixel *));
-    
-    pixel ** R = (pixel **) malloc(n/2 * sizeof(pixel *));
-    pixel ** S = (pixel **) malloc(n/2 * sizeof(pixel *));
-    pixel ** T = (pixel **) malloc(n/2 * sizeof(pixel *));
-    pixel ** U = (pixel **) malloc(n/2 * sizeof(pixel *));
 
     for(int i = 0; i < n/2; i++){
         A[i] = (pixel *) malloc(n/2 * sizeof(pixel));
@@ -183,10 +180,6 @@ void strassen_multi(int n, pixel ** X, pixel ** Y, pixel ** Z){
         DG[i] = (pixel *) malloc(n/2 * sizeof(pixel));
         CF[i] = (pixel *) malloc(n/2 * sizeof(pixel));
         DH[i] = (pixel *) malloc(n/2 * sizeof(pixel));
-        R[i] = (pixel *) malloc(n/2 * sizeof(pixel));
-        S[i] = (pixel *) malloc(n/2 * sizeof(pixel));
-        T[i] = (pixel *) malloc(n/2 * sizeof(pixel));
-        U[i] = (pixel *) malloc(n/2 * sizeof(pixel));
     }
     
     parte_mat(n, X, A, B, C, D);
@@ -194,21 +187,21 @@ void strassen_multi(int n, pixel ** X, pixel ** Y, pixel ** Z){
     
     strassen_multi(n/2, A, E, AE);
     strassen_multi(n/2, B, G, BG);
-    soma_mat(n/2, AE, BG, R);
+    soma_mat(n/2, AE, BG);
     
     strassen_multi(n/2, A, F, AF);
     strassen_multi(n/2, B, H, BH);
-    soma_mat(n/2, AF, BH, S);
+    soma_mat(n/2, AF, BH);
     
     strassen_multi(n/2, C, E, CE);
     strassen_multi(n/2, D, G, DG);
-    soma_mat(n/2, CE, DG, T);
+    soma_mat(n/2, CE, DG);
     
     strassen_multi(n/2, C, F, CF);
     strassen_multi(n/2, D, H, DH);
-    soma_mat(n/2, CF, DH, U);
+    soma_mat(n/2, CF, DH);
     
-    junta_mat(n, R, S, T, U, Z);
+    junta_mat(n, AE, AF, CE, CF, Z);
 
     free(A);
     free(B);
@@ -226,13 +219,6 @@ void strassen_multi(int n, pixel ** X, pixel ** Y, pixel ** Z){
     free(DG);
     free(CF);
     free(DH);
-    free(R);
-    free(S);
-    free(T);
-    free(U);
-    
-    //ajusta(n, Z);
-    
     return;
 }
 
