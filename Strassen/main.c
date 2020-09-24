@@ -64,6 +64,31 @@ void soma_mat(int n, pixel ** X, pixel ** Y, pixel ** Z){
 // Matriz resultado = F de dimensao nxn
 void junta_mat(int n, pixel ** R, pixel ** S, pixel ** T, pixel ** U, pixel ** F){
     
+    for(int i = 0; i < n/2; i++){ // Primeira metade das linhas
+        for(int j = 0; j < n/2; j++){ // Primeira metade das colunas P1
+            F[i][j].r = R[i][j].r;
+            F[i][j].g = R[i][j].g;
+            F[i][j].b = R[i][j].b;
+        }
+        for(int j = n/2; j < n; j++){ // Segunda metade das colunas P1
+            F[i][j].r = S[i][j-n/2].r;
+            F[i][j].g = S[i][j-n/2].g;
+            F[i][j].b = S[i][j-n/2].b;
+        }
+    }
+    
+    for(int i = n/2; i < n; i++){ // Segunda metade das linhas
+        for(int j = 0; j < n/2; j++){ // Primeira metade das colunas P2
+            F[i][j].r = T[i-n/2][j].r;
+            F[i][j].g = T[i-n/2][j].g;
+            F[i][j].b = T[i-n/2][j].b;
+        }
+        for(int j = n/2; j < n; j++){ // Segunda metade das colunas P2
+            F[i][j].r = U[i-n/2][j-n/2].r;
+            F[i][j].g = U[i-n/2][j-n/2].g;
+            F[i][j].b = U[i-n/2][j-n/2].b;
+        }
+    }
     
     
     
@@ -101,7 +126,7 @@ void parte_mat(int n, pixel ** E, pixel ** P1, pixel ** P2, pixel ** P3, pixel *
             P4[i-n/2][j-n/2].b = E[i][j].b;
         }
     }
-
+    
 }
 
 
@@ -155,8 +180,8 @@ int main(int argc, const char* argv[]){
     */
     
     // Teste parte ok
-    /*
     
+    /*
     pixel ** R = (pixel **) malloc(n/2 * sizeof(pixel *));
     pixel ** S = (pixel **) malloc(n/2 * sizeof(pixel *));
     pixel ** T = (pixel **) malloc(n/2 * sizeof(pixel *));
@@ -178,10 +203,26 @@ int main(int argc, const char* argv[]){
     printf("\n\n\n\n");
     print_matrix(n/2, U);
     printf("\n\n\n\n");
-    return 0;
+
+    // Testa juntar matrizes
+    pixel ** junta = (pixel **) malloc(n * sizeof(pixel *));
+    for(int i = 0; i < n; i++){
+        junta[i] = (pixel *) malloc(n * sizeof(pixel));
+    }
+    
+    junta_mat(n, R, S, T, U, junta);
+    
+    
+    printf("\n\n\n\n");
+    print_matrix(n, junta);
+    printf("\n\n\n\n");
+     
     */
     
     boring_multi(n, imagem, filtro, resultado);
+    
+    
+    
     //strassen_multi(n, imagem, filtro, resultado);
 
     printf("P3\n%d %d\n255\n", n, n);
