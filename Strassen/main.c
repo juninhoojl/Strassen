@@ -38,9 +38,42 @@ void boring_multi(int n, pixel ** X, pixel ** Y, pixel ** Z){
     }
 }
 
+
+// Recebe tamanho n da matriz X (nxn) e Y (nxn) e resultado Z (nxn)
 void strassen_multi(int n, pixel ** X, pixel ** Y, pixel ** Z){
 
 
+}
+
+
+// n = tamanho da matriz resultado que eh a Z que tem dimensao nxn
+// X e Y tambem tem dimensao nxn
+void soma_mat(int n, pixel ** X, pixel ** Y, pixel ** Z){
+    
+    // Lembrar de somar os RGB e nao os itens
+    
+    
+}
+
+// n = tamanho da matriz resultado (que vai ser o dobro de R,S,T,U, que sao (n/2)x(n/2))
+// Matriz resultado = F de dimensao nxn
+void junta_mat(int n, pixel ** R, pixel ** S, pixel ** T, pixel ** U, pixel ** F){
+    
+    
+    
+    
+}
+
+// Matriz entrada = E que tem dimensao nxn
+// P1 (n/2 x n/2) recebe A|E
+// P2 (n/2 x n/2) recebe B|F
+// P3 (n/2 x n/2) recebe C|G
+// P4 (n/2 x n/2) recebe D|H
+void parte_mat(int n, pixel ** E, pixel ** P1, pixel ** P2, pixel ** P3, pixel ** P4, pixel ** P5){
+    
+    
+    
+    
 }
 
 
