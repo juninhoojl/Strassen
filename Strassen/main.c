@@ -3,7 +3,9 @@
 //  Strassen
 //
 //  Created by José Luiz Junior on 23/09/20.
-//
+//  Disciplina: CIC110 - Análise e Projeto de Algoritmos I
+//  Grupo: José Luiz Junior e Isabela Corsi
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,6 +13,42 @@
 typedef struct t_pixel{
     int r, g, b;
 } pixel;
+
+// Matriz entrada = E que tem dimensao nxn
+// P1 (n/2 x n/2) recebe A|E
+// P2 (n/2 x n/2) recebe B|F
+// P3 (n/2 x n/2) recebe C|G
+// P4 (n/2 x n/2) recebe D|H
+void parte_mat(int n, pixel ** E, pixel ** P1, pixel ** P2, pixel ** P3, pixel ** P4){
+    
+    for(int i = 0; i < n/2; i++){ // Primeira metade das linhas
+        for(int j = 0; j < n/2; j++){ // Primeira metade das colunas P1
+            P1[i][j].r = E[i][j].r;
+            P1[i][j].g = E[i][j].g;
+            P1[i][j].b = E[i][j].b;
+        }
+        for(int j = n/2; j < n; j++){ // Segunda metade das colunas P1
+            P2[i][j-n/2].r = E[i][j].r;
+            P2[i][j-n/2].g = E[i][j].g;
+            P2[i][j-n/2].b = E[i][j].b;
+        }
+    }
+    
+    for(int i = n/2; i < n; i++){ // Segunda metade das linhas
+        for(int j = 0; j < n/2; j++){ // Primeira metade das colunas P2
+            P3[i-n/2][j].r = E[i][j].r;
+            P3[i-n/2][j].g = E[i][j].g;
+            P3[i-n/2][j].b = E[i][j].b;
+        }
+        for(int j = n/2; j < n; j++){ // Segunda metade das colunas P2
+            P4[i-n/2][j-n/2].r = E[i][j].r;
+            P4[i-n/2][j-n/2].g = E[i][j].g;
+            P4[i-n/2][j-n/2].b = E[i][j].b;
+        }
+    }
+    
+}
+
 
 void print_matrix(int n, pixel ** M){
     for(int i = 0; i < n; i++){
@@ -36,13 +74,6 @@ void boring_multi(int n, pixel ** X, pixel ** Y, pixel ** Z){
             Z[i][j].b = res_b;
         }
     }
-}
-
-
-// Recebe tamanho n da matriz X (nxn) e Y (nxn) e resultado Z (nxn)
-void strassen_multi(int n, pixel ** X, pixel ** Y, pixel ** Z){
-
-
 }
 
 
@@ -89,44 +120,109 @@ void junta_mat(int n, pixel ** R, pixel ** S, pixel ** T, pixel ** U, pixel ** F
             F[i][j].b = U[i-n/2][j-n/2].b;
         }
     }
-    
-    
-    
 }
 
-// Matriz entrada = E que tem dimensao nxn
-// P1 (n/2 x n/2) recebe A|E
-// P2 (n/2 x n/2) recebe B|F
-// P3 (n/2 x n/2) recebe C|G
-// P4 (n/2 x n/2) recebe D|H
-void parte_mat(int n, pixel ** E, pixel ** P1, pixel ** P2, pixel ** P3, pixel ** P4){
-    
-    for(int i = 0; i < n/2; i++){ // Primeira metade das linhas
-        for(int j = 0; j < n/2; j++){ // Primeira metade das colunas P1
-            P1[i][j].r = E[i][j].r;
-            P1[i][j].g = E[i][j].g;
-            P1[i][j].b = E[i][j].b;
-        }
-        for(int j = n/2; j < n; j++){ // Segunda metade das colunas P1
-            P2[i][j-n/2].r = E[i][j].r;
-            P2[i][j-n/2].g = E[i][j].g;
-            P2[i][j-n/2].b = E[i][j].b;
-        }
+// Recebe tamanho n da matriz X (nxn) e Y (nxn) e resultado Z (nxn)
+void strassen_multi(int n, pixel ** X, pixel ** Y, pixel ** Z){
+
+    // Confere caso base, deixar 32 no futuro
+    if(n <= 1){
+        boring_multi(n, X, Y, Z);
+        return;
     }
     
-    for(int i = n/2; i < n; i++){ // Segunda metade das linhas
-        for(int j = 0; j < n/2; j++){ // Primeira metade das colunas P2
-            P3[i-n/2][j].r = E[i][j].r;
-            P3[i-n/2][j].g = E[i][j].g;
-            P3[i-n/2][j].b = E[i][j].b;
-        }
-        for(int j = n/2; j < n; j++){ // Segunda metade das colunas P2
-            P4[i-n/2][j-n/2].r = E[i][j].r;
-            P4[i-n/2][j-n/2].g = E[i][j].g;
-            P4[i-n/2][j-n/2].b = E[i][j].b;
-        }
+    // Aloca as matrizes para partir
+    
+    pixel ** A = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** B = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** C = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** D = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** E = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** F = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** G = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** H = (pixel **) malloc(n/2 * sizeof(pixel *));
+    
+    pixel ** AE = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** BG = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** AF = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** BH = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** CE = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** DG = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** CF = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** DH = (pixel **) malloc(n/2 * sizeof(pixel *));
+    
+    pixel ** R = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** S = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** T = (pixel **) malloc(n/2 * sizeof(pixel *));
+    pixel ** U = (pixel **) malloc(n/2 * sizeof(pixel *));
+
+    for(int i = 0; i < n/2; i++){
+        A[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        B[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        C[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        D[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        E[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        F[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        G[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        H[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        AE[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        BG[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        AF[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        BH[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        CE[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        DG[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        CF[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        DH[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        R[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        S[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        T[i] = (pixel *) malloc(n/2 * sizeof(pixel));
+        U[i] = (pixel *) malloc(n/2 * sizeof(pixel));
     }
     
+    parte_mat(n, X, A, B, C, D);
+    parte_mat(n, Y, E, F, G, H);
+    
+    
+    strassen_multi(n/2, A, E, AE);
+    strassen_multi(n/2, B, G, BG);
+    soma_mat(n/2, AE, BG, R);
+    
+    strassen_multi(n/2, A, F, AF);
+    strassen_multi(n/2, B, H, BH);
+    soma_mat(n/2, AF, BH, S);
+    
+    strassen_multi(n/2, C, E, CE);
+    strassen_multi(n/2, D, G, DG);
+    soma_mat(n/2, CE, DG, T);
+    
+    strassen_multi(n/2, C, F, CF);
+    strassen_multi(n/2, D, H, DH);
+    soma_mat(n/2, CF, CF, U);
+    
+    junta_mat(n, R, S, T, U, Z);
+    
+    free(A);
+    free(B);
+    free(C);
+    free(D);
+    free(E);
+    free(F);
+    free(G);
+    free(H);
+    free(AE);
+    free(BG);
+    free(AF);
+    free(BH);
+    free(CE);
+    free(DG);
+    free(CF);
+    free(DH);
+    free(R);
+    free(S);
+    free(T);
+    free(U);
+    
+    return;
 }
 
 
@@ -165,69 +261,9 @@ int main(int argc, const char* argv[]){
         }
     }
 
-    // Teste soma ok
-    /*
-    pixel ** soma = (pixel **) malloc(n * sizeof(pixel *));
-    for(int i = 0; i < n; i++){
-        soma[i] = (pixel *) malloc(n * sizeof(pixel));
-    }
-
-    soma_mat(n, imagem, imagem, soma);
-    printf("\n\n\n\n");
-    print_matrix(n, soma);
-    printf("\n\n\n\n");
-    return 0;
-    */
-    
-    // Teste parte ok
-    
-    /*
-    pixel ** R = (pixel **) malloc(n/2 * sizeof(pixel *));
-    pixel ** S = (pixel **) malloc(n/2 * sizeof(pixel *));
-    pixel ** T = (pixel **) malloc(n/2 * sizeof(pixel *));
-    pixel ** U = (pixel **) malloc(n/2 * sizeof(pixel *));
-    for(int i = 0; i < n/2; i++){
-        R[i] = (pixel *) malloc(n/2 * sizeof(pixel));
-        S[i] = (pixel *) malloc(n/2 * sizeof(pixel));
-        T[i] = (pixel *) malloc(n/2 * sizeof(pixel));
-        U[i] = (pixel *) malloc(n/2 * sizeof(pixel));
-    }
-    
-    parte_mat(n, imagem, R, S, T, U);
-    printf("\n\n\n\n");
-    print_matrix(n/2, R);
-    printf("\n\n\n\n");
-    print_matrix(n/2, S);
-    printf("\n\n\n\n");
-    print_matrix(n/2, T);
-    printf("\n\n\n\n");
-    print_matrix(n/2, U);
-    printf("\n\n\n\n");
-
-    // Testa juntar matrizes
-    pixel ** junta = (pixel **) malloc(n * sizeof(pixel *));
-    for(int i = 0; i < n; i++){
-        junta[i] = (pixel *) malloc(n * sizeof(pixel));
-    }
-    
-    junta_mat(n, R, S, T, U, junta);
-    
-    
-    printf("\n\n\n\n");
-    print_matrix(n, junta);
-    printf("\n\n\n\n");
-     
-    */
-    
-    boring_multi(n, imagem, filtro, resultado);
-    
-    
-    
-    //strassen_multi(n, imagem, filtro, resultado);
-
+    strassen_multi(n, imagem, filtro, resultado);
     printf("P3\n%d %d\n255\n", n, n);
     print_matrix(n, resultado);
-
 
     return 0;
 }
