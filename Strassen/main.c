@@ -52,10 +52,7 @@ void parte_mat(int n, pixel ** E, pixel ** P1, pixel ** P2, pixel ** P3, pixel *
 void print_matrix(int n, pixel ** M){
     for(int i = 0; i < n; i++){
         for(int j = 0; j < n; j++){
-            int r = M[i][j].r > 255 ? 255 : M[i][j].r;
-            int g = M[i][j].g > 255 ? 255 : M[i][j].g;
-            int b = M[i][j].b > 255 ? 255 : M[i][j].b;
-            printf("%d %d %d ", r, g, b);
+            printf("%d %d %d ", M[i][j].r, M[i][j].g, M[i][j].b);
         }
         printf("\n");
     }
@@ -88,18 +85,6 @@ void soma_mat(int n, pixel ** X, pixel ** Y){
             X[i][j].r += Y[i][j].r;
             X[i][j].g += Y[i][j].g;
             X[i][j].b += Y[i][j].b;
-        }
-    }
-}
-
-void soma_mat2(int n, pixel ** X, pixel ** Y, pixel ** Z){
-    
-    // Lembrar de somar os RGB e nao os itens
-    for(int i = 0; i < n; i++){
-        for(int j = 0; j < n; j++){
-            Z[i][j].r = (X[i][j].r + Y[i][j].r) > 255 ? 255 : X[i][j].r + Y[i][j].r;
-            Z[i][j].g = (X[i][j].g + Y[i][j].g) > 255 ? 255 : X[i][j].g + Y[i][j].g;
-            Z[i][j].b = (X[i][j].b + Y[i][j].b) > 255 ? 255 : X[i][j].b + Y[i][j].b;
         }
     }
 }
