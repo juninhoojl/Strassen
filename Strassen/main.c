@@ -229,7 +229,7 @@ int main(int argc, const char* argv[]){
         resultado[i] = (pixel *) malloc(n * sizeof(pixel));
     }
 
-    //cuidado, aqui vou ler linha a linha
+    //cuidado, aqui vou ler linha a linha a
     for(int i = 0; i < n; i++){
         for(int j = 0; j < n; j++){
             scanf("%d %d %d", &(imagem[i][j].r), &(imagem[i][j].g), &(imagem[i][j].b));
